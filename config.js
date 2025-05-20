@@ -62,7 +62,7 @@ global.APIKeys = {
   // 'https://website': 'apikey'
   'https://api.xteam.xyz': 'd90a9e986e18778b',
   'https://api.lolhuman.xyz': '85faf717d0545d14074659ad',
-  'https://api.neoxr.my.id': `${keysneoxr}`,
+  'https://api.neoxr.my.id': `${BBnoBt}`,
   'https://violetics.pw': 'beta',
   'https://zenzapis.xyz': `${keysxxx}`,
   'https://api-fgmods.ddns.net': 'fg-dylux',
