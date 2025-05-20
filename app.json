@@ -10,12 +10,12 @@
     "OWNERS": {
       "description": "owner numbers",
       "required": true,
-      "value": "254743706010;𝐒𝐈𝐋𝐕𝐀 𝐌𝐃 𝐁𝐎𝐓"
+      "value": "212637915359;𝐒𝐈𝐋𝐕𝐀 𝐌𝐃 𝐁𝐎𝐓"
     },
     "BOTNAME": {
       "description": "Give your BOT a name",
       "required": true,
-      "value": "SILVA-MD-BOT©®"
+      "value": "IsHaQ-XD"
     },
     "SESSION_ID": {
       "description": "your session id. get session here https://silva-session-selector.vercel.app/",
