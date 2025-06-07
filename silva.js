@@ -4,128 +4,107 @@ import express from 'express'
 import figlet from 'figlet'
 import fs from 'fs'
 import path from 'path'
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from 'url'
+import { EventEmitter } from 'events'
 
-figlet(
-  'SILVA MD',
-  {
-    font: 'Ghost',
-    horizontalLayout: 'default',
-    verticalLayout: 'default',
-  },
-  (err, data) => {
-    if (err) {
-      console.error(chalk.red('Figlet error:', err))
-      return
-    }
-    console.log(chalk.yellow(data))
-  }
-)
+// Suppress MaxListenersExceededWarning
+EventEmitter.defaultMaxListeners = Infinity
 
-figlet(
-  'Silva Bot',
-  {
-    horizontalLayout: 'default',
-    verticalLayout: 'default',
-  },
-  (err, data) => {
-    if (err) {
-      console.error(chalk.red('Figlet error:', err))
-      return
-    }
-    console.log(chalk.magenta(data))
-  }
-)
+// Path helpers
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
+// Display startup banners
+figlet('SILVA MD', { font: 'Ghost' }, (err, data) => {
+  if (err) return console.error(chalk.red('Figlet error:'), err)
+  console.log(chalk.yellow(data))
+})
+
+figlet('Silva Bot', (err, data) => {
+  if (err) return console.error(chalk.red('Figlet error:'), err)
+  console.log(chalk.magenta(data))
+})
+
+// Start Express server
 const app = express()
 const port = process.env.PORT || 5000
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-app.use(express.static(path.join(__dirname, 'jusorts')));
-
-app.get('/', (req, res) => {
-  res.redirect('/silva.html');
-});
+app.use(express.static(path.join(__dirname, 'jusorts')))
+app.get('/', (req, res) => res.redirect('/silva.html'))
 
 app.listen(port, () => {
   console.log(chalk.green(`Port ${port} is open`))
 })
 
+// Controlled bot launcher
 let isRunning = false
-
 async function start(file) {
   if (isRunning) return
   isRunning = true
 
-  const currentFilePath = new URL(import.meta.url).pathname
-  const args = [path.join(path.dirname(currentFilePath), file), ...process.argv.slice(2)]
-  const p = spawn(process.argv[0], args, {
-    stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
+  const args = [path.join(__dirname, file), ...process.argv.slice(2)]
+  const child = spawn(process.argv[0], args, {
+    stdio: ['inherit', 'inherit', 'inherit', 'ipc']
   })
 
-  p.on('message', data => {
-    console.log(chalk.cyan(`✔️RECEIVED ${data}`))
-    switch (data) {
-      case 'reset':
-        p.kill()
-        isRunning = false
-        start.apply(this, arguments)
-        break
-      case 'uptime':
-        p.send(process.uptime())
-        break
+  child.on('message', data => {
+    console.log(chalk.cyan(`✔️ RECEIVED: ${data}`))
+    if (data === 'reset') {
+      child.kill()
+      isRunning = false
+      start(file)
+    } else if (data === 'uptime') {
+      child.send(process.uptime())
     }
   })
 
-  p.on('exit', code => {
+  child.on('exit', code => {
     isRunning = false
-    console.error(chalk.red(`❌Exited with code: ${code}`))
-
-    if (code === 0) return
-
-    fs.watchFile(args[0], () => {
-      fs.unwatchFile(args[0])
-      start('sylivanus.js')
-    })
+    console.error(chalk.red(`❌ Exited with code: ${code}`))
+    if (code !== 0) {
+      fs.watchFile(args[0], () => {
+        fs.unwatchFile(args[0])
+        start(file)
+      })
+    }
   })
 
-  p.on('error', err => {
-    console.error(chalk.red(`Error: ${err}`))
-    p.kill()
+  child.on('error', err => {
+    console.error(chalk.red(`❌ Child process error: ${err}`))
+    child.kill()
     isRunning = false
-    start('sylivanus.js')
+    start(file)
   })
 
-  const pluginsFolder = path.join(path.dirname(currentFilePath), 'SilvaXlab')
-
+  // Plugin loader
+  const pluginsFolder = path.join(__dirname, 'SilvaXlab')
   fs.readdir(pluginsFolder, async (err, files) => {
     if (err) {
-      console.error(chalk.red(`Error reading SilvaXlab folder: ${err}`))
+      console.error(chalk.red(`Error reading plugins: ${err}`))
       return
     }
     console.log(chalk.yellow(`Installed ${files.length} plugins`))
 
+    // Check Baileys version
     try {
       const { default: baileys } = await import('@whiskeysockets/baileys')
       const version = (await baileys.fetchLatestBaileysVersion()).version
-      console.log(chalk.yellow(`Using Baileys version ${version}`))
-    } catch (e) {
-      console.error(chalk.red(' Baileys library is not installed'))
+      console.log(chalk.blue(`Using Baileys version ${version}`))
+    } catch {
+      console.error(chalk.red('Baileys library is not installed.'))
     }
   })
 }
 
+// Auto-restart logic
 start('sylivanus.js')
 
-process.on('unhandledRejection', () => {
-  console.error(chalk.red(`Unhandled promise rejection. Bot will restart...`))
+process.on('unhandledRejection', err => {
+  console.error(chalk.red('Unhandled rejection:'), err)
   start('sylivanus.js')
 })
 
 process.on('exit', code => {
-  console.error(chalk.red(`Exited with code: ${code}`))
-  console.error(chalk.red(`Bot will restart...`))
+  console.error(chalk.red(`Process exited with code ${code}`))
   start('sylivanus.js')
 })
