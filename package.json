@@ -1,7 +1,7 @@
 {
-    "name": "SILVA MD",
+    "name": "IsHaQ-MD",
     "version": "4.0.1",
-    "description": "Silva MD Bot is a powerful, multi-functional WhatsApp bot designed for moderation, automation, media tools, and smart AI features — all in one seamless experience. Built for performance, secured for trust. 🚀",
+    "description": "IsHaQ-MD Bot is a powerful, multi-functional WhatsApp bot designed for moderation, automation, media tools, and smart AI features — all in one seamless experience. Built for performance, secured for trust. 🚀",
   "main": "silva.js",
   "type": "module",
   "directories": {
@@ -27,7 +27,7 @@
   ],
   "homepage": "https://github.com/SilvaTechB/silva-md-bot",
   "author": {
-    "name": "GURU",
+    "name": "JAWAD",
     "email": "sylivanus.silva@gmail.com",
     "url": "https://github.com/SilvaTechB"
   },
