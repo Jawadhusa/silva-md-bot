@@ -1,5 +1,5 @@
 {
-  "name": "𝐒𝐈𝐋𝐕𝐀 𝐌𝐃 𝐁𝐎𝐓",
+  "name": "IsHaQ-MD",
   "description": " with great power comes with great responsibilities. follow the deployment process below..",
   "keywords": [
     "whatsapp bot"
@@ -10,17 +10,17 @@
     "OWNERS": {
       "description": "owner numbers",
       "required": true,
-      "value": "254743706010;𝐒𝐈𝐋𝐕𝐀 𝐌𝐃 𝐁𝐎𝐓"
+      "value": "212637915359;IsHaQ-MD"
     },
     "BOTNAME": {
       "description": "Give your BOT a name",
       "required": true,
-      "value": "SILVA-MD-BOT©®"
+      "value": "IsHaQ-MD"
     },
     "SESSION_ID": {
       "description": "your session id. get session here https://silva-session-selector.vercel.app/",
       "required": true,
-      "value": ""
+      "value": "Silva~JcYQXLjB#gSf14feexb1EdVZ4XU8KmDFdWILlhuNWwdWZWB8edXU"
     },
     "MODE": {
       "description": "mode public or private",
@@ -40,7 +40,7 @@
     "autoRead": {
       "description": "make it true or false if you want bot to read messages leave it blank if you don't want it to read messages",
       "required": false,
-      "value": ""
+      "value": "false"
       },
     "WELCOME_MSG": {
       "description": "make it true or false if you want bot to Send welcome message when someone joins a group",
